@@ -6,6 +6,7 @@ import Goal_botcount_ratio as gbr
 import find_goals as fg
 import bot_lists as bl
 
+# import dataframe from github repo
 url = 'https://raw.githubusercontent.com/TV354/Hector/refs/heads/main/Dataframes/2.csv'
 df = pd.read_csv(url, index_col=0)
 
@@ -26,16 +27,18 @@ delta_time = 100
 # list of times, balls
 ball_owned = []
 
+# create lists for creation of dataframe
 time = []
 bot = []
 position_x = []
 position_y = []
 
+# create temp var
 temp = ''
 
 
 
-
+# loop trough df and bots of yellow team
 for i in df.index:
     for l in range(0, len(array_Y_X_Y[0])):
         # If Ball_X is in a radius of half the bot`s width plus half the ball`s width plus 1.5cm
@@ -45,7 +48,7 @@ for i in df.index:
                 # add point in time, bot name and bot position to ball_owned
                 ball_owned.append([i, array_Y_X_Y[0][l], [df.loc[i, array_Y_X_Y[0][l]], df.loc[i, array_Y_X_Y[1][l]]]])
 
-
+# loop trough df and bots of blue team
 for i in df.index:
     for l in range(0, len(array_B_X_Y[0])):
         # If Ball_X is in a radius of half the bot`s width plus half the ball`s width plus 0.7cm
@@ -63,7 +66,7 @@ for i in df.index:
                         break
                         
 
-
+# create dataframe of ball ownership
 for i in ball_owned:
     time.append(i[0])
     bot.append(i[1])
@@ -80,17 +83,22 @@ ball_own = pd.DataFrame(
         }
     )
 
+# create list of passes
 passes = []
+
 temp = bot[0]
 
+# loop through passes
 for i in range(0, len(time)):
-    
+    # if a new bot owns ball: add tupel of time, old bot and new bot to passes list
     if bot[i] != temp:
         passes.append([time[i], temp, bot[i]])
     temp = bot[i]
 
+# sort passes by time
 passes.sort(key=lambda x: x[0])        
 
+# print details of all passes
 for i in range (0, len(passes)):
     print(passes[i][0], "from", passes[i][1], "to", passes[i][2])
 print(len(passes))
