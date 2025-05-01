@@ -7,7 +7,10 @@ import find_goals as fg
 import bot_lists as bl
 
 # import df
-df = pd.read_csv("C:/Users/timo_/Documents/Koop-Phase_Hector/Datensätze/2.csv")
+#df = pd.read_csv("C:/Users/timo_/Documents/Koop-Phase_Hector/Datensätze/2.csv")
+
+url = 'https://https://github.com/TV354/Hector'
+df = pd.read_csv(url, index_col=0)
 
 # sides of different teams (+1 == right; -1 == left)
 Y_side = +1
@@ -15,14 +18,15 @@ B_side = -1
 
 goaltimes = fg.find_goals(df, Y_side, B_side)
 
+# store registers of yellow bots X and Y coordinates in 2d array
 array_Y_X_Y = [bl.bot_lists(df)[0], bl.bot_lists(df)[2]]
+# store registers of blue bots X and Y coordinates in 2d array
 array_B_X_Y = [bl.bot_lists(df)[1], bl.bot_lists(df)[3]]
 
 # time checked (in delta_time * 10ms)
 delta_time = 100
 
-kickers = []
-
+# list of times, balls
 ball_owned = []
 
 time = []
@@ -78,9 +82,6 @@ ball_own = pd.DataFrame(
             "position y": position_y,
         }
     )
-
-
-print(ball_own)
 
 passes = []
 temp = bot[0]
