@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import numpy.random as npr
 
-df = pd.read_csv("C:/Users/Florian/Documents/Hector_Seminar/Kooperationsphase/ml_data_YELLOW0.csv")
+
 
 
 def find_goals(df, Y_side, B_side):
