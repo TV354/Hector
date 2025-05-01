@@ -47,9 +47,9 @@ for i in df.index:
 
 for i in df.index:
     for l in range(0, len(array_B_X_Y[0])):
-        # If Ball_X is in a radius of half the bot`s width plus half the ball`s width plus 1.5cm
-        if (df.loc[i, 'Ball_X'] <= (df.loc[i, array_B_X_Y[0][l]] + 180/2 + 43/2 + 15))  and  (df.loc[i, 'Ball_X'] >= (df.loc[i, array_B_X_Y[0][l]] - 180/2 - 43/2 - 15)):
-            if (df.loc[i, 'Ball_Y'] <= (df.loc[i, array_B_X_Y[1][l]] + 180/2 + 43/2 + 15))  and  (df.loc[i, 'Ball_Y'] >= (df.loc[i, array_B_X_Y[1][l]] - 180/2 - 43/2 - 15)):
+        # If Ball_X is in a radius of half the bot`s width plus half the ball`s width plus 0.7cm
+        if (df.loc[i, 'Ball_X'] <= (df.loc[i, array_B_X_Y[0][l]] + 180/2 + 43/2 + 10))  and  (df.loc[i, 'Ball_X'] >= (df.loc[i, array_B_X_Y[0][l]] - (180/2 + 43/2 + 10))):
+            if (df.loc[i, 'Ball_Y'] <= (df.loc[i, array_B_X_Y[1][l]] + 180/2 + 43/2 + 10))  and  (df.loc[i, 'Ball_Y'] >= (df.loc[i, array_B_X_Y[1][l]] - (180/2 + 43/2 + 10))):
                 
                 for m in ball_owned:
                         
@@ -91,7 +91,7 @@ for i in range(0, len(time)):
         passes.append([time[i], temp, bot[i]])
     temp = bot[i]
 
-print(passes)
+passes.sort(key=lambda x: x[0])        
 
 for i in range (0, len(passes)):
     print(passes[i][0], "from", passes[i][1], "to", passes[i][2])

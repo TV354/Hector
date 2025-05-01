@@ -36,7 +36,7 @@ def bot_lists(df):
     for i in array_all:
         if ('Y_' in i) and (' Y' in i):
             array_Y_Y.append(i)
-        elif ' B' in i:
+        elif ('Y_' in i) and (' B' in i):
             array_B_Y.append(i)
 
     array_B_X.sort()
