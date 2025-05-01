@@ -5,8 +5,7 @@ import numpy.random as npr
 import find_goals as fg
 import bot_lists as bl
 
-# import df
-df = pd.read_csv("C:/Users/Florian/Documents/Hector_Seminar/Kooperationsphase/ml_data_YELLOW0.csv")
+
 
 
 # sides of different teams (+1 == right; -1 == left)

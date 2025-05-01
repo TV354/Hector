@@ -9,7 +9,7 @@ import bot_lists as bl
 # import df
 #df = pd.read_csv("C:/Users/timo_/Documents/Koop-Phase_Hector/Datensätze/2.csv")
 
-url = 'https://https://github.com/TV354/Hector'
+url = 'https://raw.githubusercontent.com/TV354/Hector/Datensätze/2.csv'
 df = pd.read_csv(url, index_col=0)
 
 # sides of different teams (+1 == right; -1 == left)
