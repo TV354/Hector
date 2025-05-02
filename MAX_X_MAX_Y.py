@@ -6,10 +6,10 @@ import numpy.random as npr
 df = pd.read_csv('C:/Users/Florian/Documents/Hector_Seminar/Kooperationsphase/ml_data_YELLOW0.csv')
 
 # define variables with the balls min and max coordinates of both X and Y 
-min_x = df['D_X_BotID 3 Y'].min()
-max_x = df['D_X_BotID 3 Y'].max()
-min_y = df['D_Y_BotID 3 Y'].min()
-max_y = df['D_Y_BotID 3 Y'].max()
+min_x = df['D_X_BotID 6 Y'].min()
+max_x = df['D_X_BotID 6 Y'].max()
+min_y = df['D_Y_BotID 6 Y'].min()
+max_y = df['D_Y_BotID 6 Y'].max()
 
 # display variables 
 print(f"Min X: {min_x}")
