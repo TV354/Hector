@@ -3,7 +3,8 @@ import pandas as pd
 import numpy.random as npr
 
 # read data
-df = pd.read_csv('C:/Users/Florian/Documents/Hector_Seminar/Kooperationsphase/ml_data_YELLOW0.csv')
+url = 'https://raw.githubusercontent.com/TV354/Hector/refs/heads/main/Dataframes/2.csv'
+df = pd.read_csv(url, index_col=0)
 
 # define variables with the balls min and max coordinates of both X and Y 
 min_x = df['D_X_BotID 6 Y'].min()
