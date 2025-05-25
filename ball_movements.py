@@ -33,9 +33,15 @@ bot = []
 position_x = []
 position_y = []
 
+# list of passes of the respective teams
+b_team_passes = []
+y_team_passes = []
+
+# create list of switches of ball ownership
+passes = []
+
 # create temp var
 temp = ''
-
 
 
 # loop trough df and bots of yellow team
@@ -83,12 +89,9 @@ ball_own = pd.DataFrame(
         }
     )
 
-# create list of passes
-passes = []
-
 temp = bot[0]
 
-# loop through passes
+# loop through ball ownership
 for i in range(0, len(time)):
     # if a new bot owns ball: add tupel of time, old bot and new bot to passes list
     if bot[i] != temp:
@@ -98,7 +101,26 @@ for i in range(0, len(time)):
 # sort passes by time
 passes.sort(key=lambda x: x[0])        
 
-# print details of all passes
+# loop thrpugh passes
 for i in range (0, len(passes)):
-    print(passes[i][0], "from", passes[i][1], "to", passes[i][2])
-print(len(passes))
+
+    # if the ball ownership does not switch teams add pass to list of passes of respective team
+    
+    if ((' B' in passes[i][1]) and (' B' in passes[i][2])):
+        b_team_passes.append([time[i], passes[i][1], passes[i][2]])
+    if ((' Y' in passes[i][1]) and (' Y' in passes[i][2])):
+        y_team_passes.append([time[i], passes[i][1], passes[i][2]])
+
+
+# print details of all passes
+
+print("BLUE TEAM PASSES")
+print()
+for i in range (0, len(b_team_passes)):
+    print(b_team_passes[i][0], "from", b_team_passes[i][1], "to", b_team_passes[i][2])
+print()
+print()
+print("YELLOW TEAM PASSES")
+print()
+for i in range (0, len(y_team_passes)):
+    print(y_team_passes[i][0], "from", y_team_passes[i][1], "to", y_team_passes[i][2])
