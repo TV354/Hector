@@ -13,7 +13,7 @@ import get_run_time as grt
 # Define the GitHub repo and folder path
 user = "TV354"
 repo = "Hector"
-folder = "Dataframes/for Evaluation"
+folder = "Dataframes/Evaluation"
 branch = "main"
 
 # GitHub API URL to list folder contents
@@ -33,17 +33,21 @@ for file_info in files:
         dataframes.append(df)
 
 
-#print(dataframes[0].loc[60001000000, 'Goal_Y'])
-
-
+# array for the goal-botcount-ratio for evaluation
 gbr_statistic = []
 
+# loop through all dfs
 for i in range(0, len(dataframes)):
+
+    # check multiple parts of the field
     for l in range(50, 100, 10):
-        for n in range(0, gbr.Goal_botcount_ratio(dataframes[i], l).index):
-            
-            if (gbr.Goal_botcount_ratio(dataframes[i], l).loc[n, "side"] == "Y_side"):
-                gbr_statistic.append([l, gbr.Goal_botcount_ratio(dataframes[i], l).loc[n, "botcount yellow"], gbr.Goal_botcount_ratio(dataframes[i], l).loc[n, "botcount blue"]])
+
+        # convert all created dfs to a singular array
+        for n in gbr.Goal_botcount_ratio(dataframes[i], l).index:
+            gbr_statistic.append([l, gbr.Goal_botcount_ratio(dataframes[i], l).loc[n, "botcount attacker"], gbr.Goal_botcount_ratio(dataframes[i], l).loc[n, "defender attacker"]])
 
 print(len(gbr_statistic))
+print(gbr_statistic)
+
+
 

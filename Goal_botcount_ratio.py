@@ -18,24 +18,24 @@ def get_sides(df):
 
 
     
-    if(goaltimes[1] == "Y_side"):
-        if(df.loc[goaltimes[0], 'Ball_X'] > 0):
+    if(goaltimes[0][1] == "Y_side"):
+        if(df.loc[goaltimes[0][0], 'Ball_X'] > 0):
             Y_side = +1
             B_side = -1
-        elif(df.loc[goaltimes[0], 'Ball_X'] < 0):
+        elif(df.loc[goaltimes[0][0], 'Ball_X'] < 0):
             Y_side = -1
             B_side = +1
-        if(grt.grt(df, goaltimes[0]) >= 300000):
+        if(grt.grt(df, goaltimes[0][0]) >= 300000):
             Y_side *= -1
             B_side *= -1
     else:
-        if(df.loc[goaltimes[0], 'Ball_X'] > 0):
+        if(df.loc[goaltimes[0][0], 'Ball_X'] > 0):
             Y_side = -1
             B_side = +1
-        elif(df.loc[goaltimes[0], 'Ball_X'] < 0):
+        elif(df.loc[goaltimes[0][0], 'Ball_X'] < 0):
             Y_side = +1
             B_side = -1
-        if(grt.grt(df, goaltimes[0]) >= 300000):
+        if(grt.grt(df, goaltimes[0][0]) >= 300000):
             Y_side *= -1
             B_side *= -1
 
@@ -52,7 +52,7 @@ def get_sides(df):
 def Goal_botcount_ratio(df, n):
 
     Y_side = get_sides(df)[0]
-    Y_side = get_sides(df)[1]
+    B_side = get_sides(df)[1]
 
     # rightmost position of the robots
     max_x = n/100 * 6000
@@ -72,8 +72,8 @@ def Goal_botcount_ratio(df, n):
     # side of goal
     side = []
     # botcount of blue/yellow in nth part of field
-    botcount_B_list = []
-    botcount_Y_list = []
+    botcount_atk = []
+    botcount_def = []
 
     t_array = []
 
@@ -95,34 +95,46 @@ def Goal_botcount_ratio(df, n):
                 # increase the count of bots in the n´th quarter of the field
                 botcount_B += 1
 
+        # save the times of the goals for the df
         time.append(i[0])
+
+        # check for every timestamp which team was attacking and defending and add that infor to the df
         if (i[1] == Y_side):
             if (grt.grt(df, i[0]) <= 300000):
                 side.append("Y_side")
+                botcount_atk.append(botcount_B)
+                botcount_def.append(Botcount_Y)
             else:
                 side.append("B_side")
+                botcount_atk.append(botcount_Y)
+                botcount_def.append(Botcount_B)
         if (i[1] == B_side):
             if (grt.grt(df, i[0]) <= 300000):
                 side.append("B_side")
+                botcount_atk.append(botcount_Y)
+                botcount_def.append(Botcount_B)
             else:
                 side.append("Y_side")
-        botcount_B_list.append(botcount_B)
-        botcount_Y_list.append(botcount_Y)
+                botcount_atk.append(botcount_B)
+                botcount_def.append(Botcount_Y)
+
 
         # reset botcounts for next iteration of time loop
         botcount_Y = 0
         botcount_B = 0
 
 
+    # create the df
     ratio = pd.DataFrame(
         {
             "time": time,
             "side": side,
-            "botcount blue": botcount_B_list,
-            "botcount yellow": botcount_Y_list,
+            "botcount attacker": botcount_atk,
+            "botcount defender": botcount_def,
         }
     )
 
+    # output the df
     return(ratio)
 
 #print(Goal_botcount_ratio(df, Y_side, B_side))
