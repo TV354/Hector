@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import numpy.random as npr
 
+
+
 def grt(df, time):
     
     # game-runtime in ms

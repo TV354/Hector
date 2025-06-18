@@ -2,13 +2,10 @@ import numpy as np
 import pandas as pd
 import numpy.random as npr
 
-n = 367
-m = 4
+# import dataframe from github repo
+url = 'https://raw.githubusercontent.com/TV354/Hector/refs/heads/main/Dataframes/for Evaluation/2.csv'
+df = pd.read_csv(url, index_col=0)
 
-dates = pd.date_range("20240101", periods = n)
 
-df = pd.DataFrame(npr.randn(n,m), index=dates, columns=list("ABCD"))
-
-#print(dates)
-#print(df.to_numpy())
+print(df.loc[df.index[0], 'Ball_X'])
 

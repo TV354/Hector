@@ -3,7 +3,7 @@ import pandas as pd
 import numpy.random as npr
 
 
-def find_times(df):
+def find_goals(df):
     # times where goals scored
     goaltimes = []
     
@@ -18,7 +18,7 @@ def find_times(df):
         if df.loc[i, 'Goal_Y'] > temp_Y:
             
             # add current time to goaltimes
-            goaltimes.append(i)
+            goaltimes.append([i, "Y_side"])
             # increase the temp var to current goal count
             temp_Y = df.loc[i, 'Goal_Y']
 
@@ -26,14 +26,14 @@ def find_times(df):
         if df.loc[i, 'Goal_B'] > temp_B:
                 
             # add current time & side of goal to goaltimes
-            goaltimes.append([i])
+            goaltimes.append([i, "B_side"])
             # increase the temp var to current goal count
             temp_B = df.loc[i, 'Goal_B']
         
     return(goaltimes)
 
 
-def find_goals(df, Y_side, B_side):
+def find_goalsides(df, Y_side, B_side):
     # times where goals scored
     goaltimes = []
     
@@ -70,14 +70,3 @@ def find_goals(df, Y_side, B_side):
             temp_B = df.loc[i, 'Goal_B']
         
     return(goaltimes)
-
-
-
-
-
-
-
-
-
-
-

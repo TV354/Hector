@@ -14,21 +14,30 @@ import get_run_time as grt
 def get_sides(df):
 
     # get times of scored goal
-    goaltimes = fg.find_times(df)
+    goaltimes = fg.find_goals(df)
 
 
     
-    if((df.loc[goaltimes[0] - 1, 'Goal_Y']) != (df.loc[goaltimes[0], 'Goal_Y'])):
-        if(df.loc[goaltimes[0], 'Ball_X'] >= 0):
+    if(goaltimes[1] == "Y_side"):
+        if(df.loc[goaltimes[0], 'Ball_X'] > 0):
             Y_side = +1
             B_side = -1
-        elif(df.loc[goaltimes[0], 'Ball_X'] <= 0):
+        elif(df.loc[goaltimes[0], 'Ball_X'] < 0):
             Y_side = -1
             B_side = +1
         if(grt.grt(df, goaltimes[0]) >= 300000):
             Y_side *= -1
             B_side *= -1
-        
+    else:
+        if(df.loc[goaltimes[0], 'Ball_X'] > 0):
+            Y_side = -1
+            B_side = +1
+        elif(df.loc[goaltimes[0], 'Ball_X'] < 0):
+            Y_side = +1
+            B_side = -1
+        if(grt.grt(df, goaltimes[0]) >= 300000):
+            Y_side *= -1
+            B_side *= -1
 
     # sides of respective teams at the beginning of the match (+1 == right; -1 == left)    
     return([Y_side, B_side])
@@ -52,7 +61,7 @@ def Goal_botcount_ratio(df, n):
     array_B = bl.bot_lists(df)[1]
 
     # times where goals scored
-    goaltimes = fg.find_goals(df, Y_side, B_side)
+    goaltimes = fg.find_goalsides(df, Y_side, B_side)
 
     # count of bots in n´th part of the field
     botcount_Y = 0

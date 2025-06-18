@@ -8,6 +8,8 @@ import find_goals as fg
 import bot_lists as bl
 import get_run_time as grt
 
+
+
 # Define the GitHub repo and folder path
 user = "TV354"
 repo = "Hector"
@@ -31,11 +33,15 @@ for file_info in files:
         dataframes.append(df)
 
 
+#print(dataframes[0].loc[60001000000, 'Goal_Y'])
+
+
 gbr_statistic = []
 
 for i in range(0, len(dataframes)):
     for l in range(50, 100, 10):
-        for n in range(0, len(gbr.Goal_botcount_ratio(dataframes[i], l))):
+        for n in range(0, gbr.Goal_botcount_ratio(dataframes[i], l).index):
+            
             if (gbr.Goal_botcount_ratio(dataframes[i], l).loc[n, "side"] == "Y_side"):
                 gbr_statistic.append([l, gbr.Goal_botcount_ratio(dataframes[i], l).loc[n, "botcount yellow"], gbr.Goal_botcount_ratio(dataframes[i], l).loc[n, "botcount blue"]])
 
