@@ -4,19 +4,47 @@ import numpy.random as npr
 
 import find_goals as fg
 import bot_lists as bl
+import get_run_time as grt
 
 
 
 
-# sides of different teams (+1 == right; -1 == left)
-Y_side = +1
-B_side = -1
 
 
-def Goal_botcount_ratio(df, Y_side, B_side):
+def get_sides(df):
 
-    # n´th part of the field (counted from mid)
-    n = 50
+    # get times of scored goal
+    goaltimes = fg.find_times(df)
+
+
+    
+    if((df.loc[goaltimes[0] - 1, 'Goal_Y']) != (df.loc[goaltimes[0], 'Goal_Y'])):
+        if(df.loc[goaltimes[0], 'Ball_X'] >= 0):
+            Y_side = +1
+            B_side = -1
+        elif(df.loc[goaltimes[0], 'Ball_X'] <= 0):
+            Y_side = -1
+            B_side = +1
+        if(grt.grt(df, goaltimes[0]) >= 300000):
+            Y_side *= -1
+            B_side *= -1
+        
+
+    # sides of respective teams at the beginning of the match (+1 == right; -1 == left)    
+    return([Y_side, B_side])
+        
+
+
+
+
+
+
+# parameters: dataframe, sides of respective teams, percentage of field to count bots in
+def Goal_botcount_ratio(df, n):
+
+    Y_side = get_sides(df)[0]
+    Y_side = get_sides(df)[1]
+
     # rightmost position of the robots
     max_x = n/100 * 6000
 
@@ -59,7 +87,16 @@ def Goal_botcount_ratio(df, Y_side, B_side):
                 botcount_B += 1
 
         time.append(i[0])
-        side.append(i[1])
+        if (i[1] == Y_side):
+            if (grt.grt(df, i[0]) <= 300000):
+                side.append("Y_side")
+            else:
+                side.append("B_side")
+        if (i[1] == B_side):
+            if (grt.grt(df, i[0]) <= 300000):
+                side.append("B_side")
+            else:
+                side.append("Y_side")
         botcount_B_list.append(botcount_B)
         botcount_Y_list.append(botcount_Y)
 
