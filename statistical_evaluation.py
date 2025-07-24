@@ -42,13 +42,13 @@ def gbr_analysis(dataframes):
     for i in range(0, len(dataframes)):
 
         # check multiple parts of the field
-        for l in range(50, 100, 10):
+        for l in range(0, 50, 5):
 
             current_gbr = gbr.Goal_botcount_ratio(dataframes[i], l)
 
             # convert all created dfs to a singular array
             for n in current_gbr.index:
-                temp_gbr_statistic.append([100 - l, current_gbr.loc[n, 'attacker count'], current_gbr.loc[n, 'defender count'], current_gbr.loc[n, 'attacker count'] / current_gbr.loc[n, 'defender count']])
+                temp_gbr_statistic.append([50 - l, current_gbr.loc[n, 'attacker count'], current_gbr.loc[n, 'defender count'], current_gbr.loc[n, 'attacker count'] / current_gbr.loc[n, 'defender count']])
 
     gbr_statistic = pd.DataFrame(temp_gbr_statistic, columns=['part of field in %', 'attacker count', 'defender count', 'ratio'])
 
@@ -155,4 +155,4 @@ def bo_analysis(dataframes):
 
 
 #gbr_analysis(dataframes)
-bo_analysis(dataframes)
+gbr_analysis(dataframes)

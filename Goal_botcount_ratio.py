@@ -12,43 +12,44 @@ import get_run_time as grt
 # parameters: dataframe, sides of respective teams, percentage of field to count bots in
 def Goal_botcount_ratio(df, n):
 
+    # rightmost position of the robots (between field center and goal)
+    max_x = n/100 * 6000
+
+    # sides of teams at gamestart
     Y_side = fg.get_og_sides(df)[0]
     B_side = fg.get_og_sides(df)[1]
 
-    # rightmost position of the robots
-    max_x = n/100 * 6000
-
+    # arrays of names of all columns of bots x-/y-coordinate, sorted by team
     array_Y = bl.bot_lists(df)[0]
     array_B = bl.bot_lists(df)[1]
 
     # times where goals scored
     goaltimes = fg.find_goalsides(df, Y_side, B_side)
 
-    # count of bots in n´th part of the field
+    # count of bots in n´th part of the field (betweem field center and goal)
     botcount_Y = 0
     botcount_B = 0
 
     # array for creation of df
     gbr_array = []
 
-    t_array = []
 
-    # bot counting loop
+    ## bot counting loop ##
     # loop through times of goalscoring
     for i in goaltimes:
         
-        # loop through individual bots
+        # loop through individual bots of team Y
         for j in array_Y:
             # if bot is in n´th part of the side of the field where goal was scored at time of goal
             if df.iloc[i[0]][j] >= max_x * i[1]:
-                # increase the count of bots in the n´th quarter of the field
+                # increase the count of bots in the n´th part of the field
                 botcount_Y += 1
         
-        # loop through individual bots    
+        # loop through individual bots of team B
         for l in array_B:
             # if bot is in n´th part of the side of the field where goal was scored at time of goal
             if df.iloc[i[0]][l] >= max_x * i[1]:
-                # increase the count of bots in the n´th quarter of the field
+                # increase the count of bots in the n´th part of the field
                 botcount_B += 1
 
         # update the sides of the teams after the halftime sideswap
@@ -65,15 +66,10 @@ def Goal_botcount_ratio(df, n):
             
         elif (i[1] == B_side):
             gbr_array.append([i[0], "Y_goal", botcount_Y, botcount_B])        
-            
-        # debug condition    
-        else:
-            print("Numerical Values of sides are not -1 or 1")
 
         # reset botcounts for next iteration of time loop
         botcount_Y = 0
         botcount_B = 0
-
 
     # create the df
     ratio = pd.DataFrame(gbr_array, columns=['time', 'goal', 'attacker count', 'defender count'])

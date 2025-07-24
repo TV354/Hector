@@ -128,10 +128,10 @@ def get_og_sides(df):
 
 def find_goalsides(df, Y_side, B_side):
 
-    # get the actual times of goals from other function    
+    # get times of goals & scoring teams from find_goals-function    
     goaltimes = find_goals(df)
 
-    # loop through output of other function
+    # loop through output of find_goals-function
     for i in range(0, len(goaltimes)):
 
         ## substitute the strings with numbers ##
