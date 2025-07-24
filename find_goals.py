@@ -35,6 +35,9 @@ def find_goals_old(df):
     return(goaltimes)
 
 
+
+
+
 def find_goals(df):
 
     # times where goals scored
@@ -55,13 +58,12 @@ def find_goals(df):
         high = len(df.index) - 1 
         low  = 0
 
-
         ## binary search for goaltimes
 
         # binary search until the amount of goals of a team equals the amount of goals they scored in the whole game
         while (len([g for g in goaltimes if g[1] == f"{s}_goal"]) < max_goals):
 
-            # position for check
+            # timestamp for check
             mid = (high + low) // 2
 
             # goal found
@@ -88,6 +90,42 @@ def find_goals(df):
     return goaltimes
 
 
+
+def get_og_sides(df):
+
+    # sides of respective teams at the beginning of the match (+1 == right; -1 == left)
+    Y_side = 0
+    B_side = 0
+
+    # get times of scored goal
+    goaltimes = find_goals(df)
+    
+    # if the first goal scored
+    if(goaltimes[0][1] == "Y_goal"):
+        if   (df.iloc[goaltimes[0][0]]['Ball_X'] > 0):
+            Y_side = -1
+            B_side = +1
+        elif (df.iloc[goaltimes[0][0]]['Ball_X'] < 0):
+            Y_side = +1
+            B_side = -1
+        if   (grt.grt(df, goaltimes[0][0]) >= 300000):
+            Y_side *= -1
+            B_side *= -1
+    else:
+        if   (df.iloc[goaltimes[0][0]]['Ball_X'] > 0):
+            Y_side = +1
+            B_side = -1
+        elif (df.iloc[goaltimes[0][0]]['Ball_X'] < 0):
+            Y_side = -1
+            B_side = +1
+        if   (grt.grt(df, goaltimes[0][0]) >= 300000):
+            Y_side *= -1
+            B_side *= -1
+
+    return([Y_side, B_side])
+
+
+
 def find_goalsides(df, Y_side, B_side):
 
     # get the actual times of goals from other function    
@@ -104,7 +142,7 @@ def find_goalsides(df, Y_side, B_side):
                 goaltimes[i] = [goaltimes[i][0], B_side]
             if(grt.grt(df, goaltimes[i][0]) >= 300000):
                 # add current time & side of goal to goaltimes
-                goaltimes[i] = [goaltimes[i][0], Y_side]
+                goaltimes[i] = [goaltimes[i][0], B_side * -1]
         
         if(goaltimes[i][1] == "B_goal"):
             if(grt.grt(df, goaltimes[i][0]) <= 300000):
@@ -112,8 +150,24 @@ def find_goalsides(df, Y_side, B_side):
                 goaltimes[i] = [goaltimes[i][0], Y_side]
             if(grt.grt(df, goaltimes[i][0]) >= 300000):
                 # add current time & side of goal to goaltimes
-                goaltimes[i] = [goaltimes[i][0], B_side]
+                goaltimes[i] = [goaltimes[i][0], Y_side * -1]
     
     # output the new array
     return(goaltimes)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

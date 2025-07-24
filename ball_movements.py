@@ -7,8 +7,8 @@ import find_goals as fg
 import bot_lists as bl
 
 # import dataframe from github repo
-url = 'https://raw.githubusercontent.com/TV354/Hector/refs/heads/main/Dataframes/2.csv'
-df = pd.read_csv(url, index_col=0)
+#url = 'https://raw.githubusercontent.com/TV354/Hector/refs/heads/main/Dataframes/2.csv'
+#df = pd.read_csv(url, index_col=0)
 
 
 def ball_ownership(df):
@@ -17,7 +17,7 @@ def ball_ownership(df):
     Y_side = +1
     B_side = -1
 
-    goaltimes = fg.find_goals(df, Y_side, B_side)
+    #goaltimes = fg.find_goals(df, Y_side, B_side)
 
     # store registers of yellow bots X and Y coordinates in 2d array
     array_Y_X_Y = [bl.bot_lists(df)[0], bl.bot_lists(df)[2]]
@@ -35,13 +35,6 @@ def ball_ownership(df):
     bot = []
     position_x = []
     position_y = []
-
-    # list of passes of the respective teams
-    b_team_passes = []
-    y_team_passes = []
-
-    # create list of switches of ball ownership
-    passes = []
 
     # create temp var
     temp = ''
@@ -71,26 +64,10 @@ def ball_ownership(df):
                         if i < tempint:
                             
                             # add point in time, bot name and bot position to ball_owned
-                            ball_owned.append([i, array_B_X_Y[0][l], [df.loc[i, array_B_X_Y[0][l]], df.loc[i, array_B_X_Y[1][l]]]])
+                            ball_owned.append([i, array_B_X_Y[0][l], df.loc[i, array_B_X_Y[0][l]], df.loc[i, array_B_X_Y[1][l]]])
                             break
                             
-
-    # create dataframe of ball ownership
-    for i in ball_owned:
-        time.append(i[0])
-        bot.append(i[1])
-        position_x.append(i[2][0])
-        position_y.append(i[2][1])
-
-
-    ball_own = pd.DataFrame(
-            {
-                "time": time,
-                "bot": bot,
-                "position x": position_x,
-                "position y": position_y,
-            }
-        )
+    ball_own = pd.DataFrame(ball_owned, columns=['time', 'bot', 'position x', 'position y'])
 
     return(ball_own)
 
@@ -100,6 +77,13 @@ def passes(df):
     ball_own = ball_ownership(df)
 
     temp = bot[0]
+
+    # array of passes of the respective teams
+    b_team_passes_a = []
+    y_team_passes_a = []
+
+    # create array of switches of ball ownership
+    passes_a = []
 
     # loop through ball ownership
     for i in range(0, len(time)):
@@ -117,23 +101,31 @@ def passes(df):
         # if the ball ownership does not switch teams add pass to list of passes of respective team
         
         if ((' B' in passes[i][1]) and (' B' in passes[i][2])):
-            b_team_passes.append([time[i], passes[i][1], passes[i][2]])
+            b_team_passes_a.append([time[i], passes[i][1], passes[i][2]])
         if ((' Y' in passes[i][1]) and (' Y' in passes[i][2])):
-            y_team_passes.append([time[i], passes[i][1], passes[i][2]])
+            y_team_passes_a.append([time[i], passes[i][1], passes[i][2]])
 
-    return([b_team_passes, y_team_passes])
+    passes        = pd.DataFrame(passes_a,        columns=['time', 'from', 'to'])
+    b_team_passes = pd.DataFrame(b_team_passes_a, columns=['time', 'from', 'to'])
+    y_team_passes = pd.DataFrame(y_team_passes_a, columns=['time', 'from', 'to'])
+
+    # return an array of:
+    # - all switches in ball ownership (df)
+    # - all passes of b team (df)
+    # - all passes of y team (df)
+    return([passes, b_team_passes, y_team_passes])
 
 
 
 # print details of all passes
 
-print("BLUE TEAM PASSES")
-print()
-for i in range (0, len(b_team_passes)):
-    print(b_team_passes[i][0], "from", b_team_passes[i][1], "to", b_team_passes[i][2])
-print()
-print()
-print("YELLOW TEAM PASSES")
-print()
-for i in range (0, len(y_team_passes)):
-    print(y_team_passes[i][0], "from", y_team_passes[i][1], "to", y_team_passes[i][2])
+#print("BLUE TEAM PASSES")
+#print()
+#for i in range (0, len(b_team_passes)):
+#    print(b_team_passes[i][0], "from", b_team_passes[i][1], "to", b_team_passes[i][2])
+#print()
+#print()
+#print("YELLOW TEAM PASSES")
+#print()
+#for i in range (0, len(y_team_passes)):
+#    print(y_team_passes[i][0], "from", y_team_passes[i][1], "to", y_team_passes[i][2])

@@ -4,11 +4,14 @@ import pandas as pd
 
 def bot_lists(df):
 
+    # array used for sorting
+    array_all = []
+
+    # array of all X-Coordinate-Columns of the respective teams
     array_Y_X = []
     array_B_X = []
 
-    array_all = []
-
+    # rray of all Y-Coordinate-Columns of the respective teams
     array_Y_Y = []
     array_B_Y = []
 
@@ -53,3 +56,13 @@ def bot_lists(df):
     
     # return array of X-coord.-labels of yellow teams bots, X-coord.-labels of blue teams bots, Y-coord.-labels of yellow teams bots, Y-coord.-labels of blue teams bots
     return([array_Y_X, array_B_X, array_Y_Y, array_B_Y])
+
+
+
+
+
+
+
+
+
+    

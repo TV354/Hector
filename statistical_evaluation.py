@@ -1,5 +1,6 @@
 import pandas as pd
 import requests
+import numpy as np
 import pandas as pd
 import numpy.random as npr
 import matplotlib.pyplot as plt
@@ -8,7 +9,7 @@ import Goal_botcount_ratio as gbr
 import find_goals as fg
 import bot_lists as bl
 import get_run_time as grt
-
+import ball_movements as bm
 
 
 # Define the GitHub repo and folder path
@@ -56,42 +57,102 @@ def gbr_analysis(dataframes):
     ## CODE FOR CREATING THE PLOTS OF THE CODE
     ## if you have any questions about the functionality of this, ask somebody else, i have no idea how this stuff works
 
+    # Visualization
     field_parts = sorted(gbr_statistic['part of field in %'].unique())
-    num_parts = len(field_parts)
+    bar_width = 0.3
 
-    fig, axes = plt.subplots(num_parts, 2, figsize=(14, 5 * num_parts))
-    if num_parts == 1:
-        axes = axes.reshape(1, 2)
-
-    # Determine global x-axis ranges to enforce consistent bar width
-    max_attackers = gbr_statistic['attacker count'].max()
-    max_defenders = gbr_statistic['defender count'].max()
-    attacker_range = range(0, max_attackers + 1)
-    defender_range = range(0, max_defenders + 1)
-
-    for idx, part in enumerate(field_parts):
+    for part in field_parts:
         group = gbr_statistic[gbr_statistic['part of field in %'] == part]
 
-        # Count frequencies and reindex with full range to ensure consistent bar width
-        attacker_counts = group['attacker count'].value_counts().sort_index().reindex(attacker_range, fill_value=0)
-        defender_counts = group['defender count'].value_counts().sort_index().reindex(defender_range, fill_value=0)
+        fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
-        # Plot attacker bars
-        axes[idx, 0].bar(attacker_counts.index, attacker_counts.values, color='skyblue', width=0.8)
-        axes[idx, 0].set_title(f"{part}% Field — Goals by Attacker Count")
-        axes[idx, 0].set_xlabel("Attacker Count")
-        axes[idx, 0].set_ylabel("Goals Scored")
-        axes[idx, 0].set_xticks(attacker_range)
+        # Attacker plot
+        attacker_counts = group['attacker count'].value_counts().sort_index()
+        attacker_x = np.arange(len(attacker_counts))
+        axes[0].bar(attacker_x, attacker_counts.values, color='skyblue', width=bar_width)
+        axes[0].set_xticks(attacker_x)
+        axes[0].set_xticklabels(attacker_counts.index)
+        axes[0].set_title(f"{part}% Field — Goals by Attacker Count")
+        axes[0].set_xlabel("Attacker Count")
+        axes[0].set_ylabel("Goals Scored")
 
-        # Plot defender bars
-        axes[idx, 1].bar(defender_counts.index, defender_counts.values, color='salmon', width=0.8)
-        axes[idx, 1].set_title(f"{part}% Field — Goals by Defender Count")
-        axes[idx, 1].set_xlabel("Defender Count")
-        axes[idx, 1].set_ylabel("Goals Scored")
-        axes[idx, 1].set_xticks(defender_range)
+        # Defender plot
+        defender_counts = group['defender count'].value_counts().sort_index()
+        defender_x = np.arange(len(defender_counts))
+        axes[1].bar(defender_x, defender_counts.values, color='salmon', width=bar_width)
+        axes[1].set_xticks(defender_x)
+        axes[1].set_xticklabels(defender_counts.index)
+        axes[1].set_title(f"{part}% Field — Goals by Defender Count")
+        axes[1].set_xlabel("Defender Count")
+        axes[1].set_ylabel("Goals Scored")
 
-    plt.tight_layout()
-    plt.show()
+        plt.tight_layout()
+        plt.show()
 
 
-gbr_analysis(dataframes)
+def bo_analysis(dataframes):
+
+    for df in dataframes:
+
+        ball_own = bm.ball_ownership(df)
+        
+        goaltimes = fg.find_goals(df)
+
+        B_Y = ''
+
+        latest = 0
+
+        owned = []
+
+        periods = []
+
+
+        for i in range(0, len(goaltimes)):
+
+            if ("Y_" in goaltimes[i][1]):
+                B_Y = ' Y'
+            else:
+                B_Y = ' B'
+
+            for l in range(1, len(ball_own.index)):
+                
+                if ((ball_own.iloc[l]['time'] > goaltimes[i][0]) and (ball_own.iloc[l - 1]['time'] <= goaltimes[i][0])):
+
+                    latest = ball_own.index[l - 1]
+                    break
+
+            for l in range(latest, 0, -1):
+
+                if (B_Y in ball_own.iloc[goaltimes[l][0]]['bot']):
+
+                    owned.append(l)
+                    print("test")
+                
+                else:
+                    break
+
+            periods.append[owned[0] - owned[len(owned) - 1]]
+
+         # Create a DataFrame and count goals per possession duration
+        df_plot = pd.Series(periods).value_counts().sort_index()
+
+        # Plot
+        plt.figure(figsize=(10, 6))
+        plt.plot(df_plot.index, df_plot.values, marker='o', linestyle='-', color='purple')
+        plt.title("Number of Goals by Length of Possession Period")
+        plt.xlabel("Possession Length (in frames or units)")
+        plt.ylabel("Number of Goals")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show() 
+
+
+
+
+
+
+
+
+
+#gbr_analysis(dataframes)
+bo_analysis(dataframes)
